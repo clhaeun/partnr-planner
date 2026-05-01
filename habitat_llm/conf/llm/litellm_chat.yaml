@@ -1,0 +1,45 @@
+llm:
+  _target_    : habitat_llm.llm.LiteLLMChat
+  _partial_   : True
+
+verbose       : True
+
+system_message       : 'You are an expert at task planning.'
+
+# System, User, Assistant and end of turn tags
+system_tag : ""
+user_tag : ""
+assistant_tag : ""
+eot_tag : ""
+
+# Decide whether to keep history
+keep_message_history   : False
+
+generation_params:
+  # LiteLLM model identifier. Examples:
+  #   gpt-4o                     -> OpenAI
+  #   claude-sonnet-4-20250514       -> Anthropic
+  #   gemini/gemini-pro          -> Google
+  #   anthropic/claude-3-haiku   -> Anthropic (explicit provider)
+  #   openai/qwen2.5-7b-instruct -> Local vLLM (via api_base)
+  model        : openai//home/chaeun/models/qwen2.5-14b-instruct
+
+  # Optional: base URL for local/custom OpenAI-compatible servers (e.g. vLLM)
+  # Set to null to use the provider's default endpoint.
+  api_base     : "http://localhost:8000/v1"
+
+  # Optional: API key. Set to null to use environment variables.
+  # Use "dummy" for local servers that don't require authentication.
+  api_key      : "dummy"
+
+  # The maximum number of tokens to generate in the completion.
+  max_tokens    : 250
+
+  # Sampling temperature between 0 and 2.
+  temperature   : 0
+
+  # Nucleus sampling. 0.1 means only the top 10% probability mass tokens.
+  top_p         : 1
+
+  # up to 4 sequences that stop the generation
+  stop          : "Assigned!"

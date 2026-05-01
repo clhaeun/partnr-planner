@@ -224,6 +224,8 @@ class Planner:
                     self.env_interface.reset_composite_action_response()
                 elif agent_uid in responses:
                     action_and_args = self.last_high_level_actions[agent_uid]
+                    if action_and_args[0] is None:
+                        continue
                     action_results = responses[agent_uid]
                 int_other_agent_uid = 1 - int_agent_uid
                 # update own and other's world-graph

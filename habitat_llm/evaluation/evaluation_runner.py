@@ -25,6 +25,7 @@ from habitat_llm.agent import Agent
 from habitat_llm.agent.env import EnvironmentInterface
 from habitat_llm.examples.example_utils import DebugVideoUtil
 from habitat_llm.planner.planner import Planner
+from habitat_llm.tools.motor_skills.art_obj.lock_registry import FurnitureLockRegistry
 from habitat_llm.utils import cprint, rollout_print
 from habitat_llm.utils.sim import init_agents
 from habitat_llm.world_model import Entity, WorldGraph
@@ -189,6 +190,9 @@ class EvaluationRunner:
         # Reset filenames
         self.episode_filename = ""
         self.current_instruction = ""
+
+        # Reset furniture lock registry between episodes
+        FurnitureLockRegistry().reset()
 
         # Reset planners and the agents owned by the planners
         # This will also reset skills owned by the agents to
@@ -575,6 +579,22 @@ class EvaluationRunner:
 
         # Initialize metadata
         self.initialize_instruction_metadata(instruction, output_name)
+
+        # Initialize furniture locks from episode metadata
+        registry = FurnitureLockRegistry()
+        registry.reset()
+        try:
+            current_episode = self.env_interface.env.env.env._env.current_episode
+            if current_episode.info and "lock_config" in current_episode.info:
+                for lock in current_episode.info["lock_config"]:
+                    registry.register_lock(
+                        lock["furniture_name"],
+                        lock["password"],
+                        lock["hint"],
+                    )
+        except (AttributeError, KeyError, TypeError):
+            pass  # No lock config — normal episode
+
         # Initialize sensor observations
         observations = self.env_interface.get_observations()
 

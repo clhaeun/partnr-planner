@@ -366,7 +366,19 @@ def fetch_from_valid_search_space(action_name, action_input, agent_id, params=No
 
     # Get the best matching action input
     motor_actions = ["navigate", "open", "close", "rearrange", "pick", "place"]
-    if any(motor_action in action_name.lower() for motor_action in motor_actions):
+    if "ask" in action_name.lower():
+        # For Ask, keep the question text as-is (no world graph matching)
+        action_input_corrected = action_input
+    elif "unlock" in action_name.lower():
+        # For Unlock, only correct the furniture name (1st arg), keep password (2nd arg) as-is
+        substrings = split_string(action_input, ",")
+        if len(substrings) >= 2:
+            valid_node_names = params["world_graph"][agent_id].get_all_node_names()
+            corrected_furniture = most_matching_string(substrings[0], valid_node_names)
+            action_input_corrected = f"{corrected_furniture}, {substrings[1].strip()}"
+        else:
+            action_input_corrected = action_input
+    elif any(motor_action in action_name.lower() for motor_action in motor_actions):
         substrings = split_string(action_input, ",")
         valid_node_names = params["world_graph"][agent_id].get_all_node_names()
         action_input_corrected = ", ".join(

@@ -33,6 +33,12 @@ from habitat_llm.tools.motor_skills.art_obj.oracle_open_close_skill import (
     OracleOpenSkill,
     OracleCloseSkill,
 )
+from habitat_llm.tools.motor_skills.art_obj.oracle_unlock_skill import (
+    OracleUnlockSkill,
+)
+from habitat_llm.tools.motor_skills.ask.oracle_ask_skill import (
+    OracleAskSkill,
+)
 
 # Rearrangement
 from habitat_llm.tools.motor_skills.rearrange.oracle_rearrange_skill import (

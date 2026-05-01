@@ -1,0 +1,19 @@
+oracle_unlock:
+  _target_                     : 'habitat_llm.tools.motor_skills.MotorSkillTool'
+  _recursive_                  : False
+
+  skill_config                  :
+    skill                      :
+      _target_                 : "habitat_llm.tools.motor_skills.OracleUnlockSkill"
+      _partial_                : True
+
+    name                       : 'Unlock'
+    description                : 'Used for unlocking a password-locked piece of furniture. You must provide the name of the furniture and a 4-digit password. If the password is wrong, a hint will be provided. Example (Unlock[chest_of_drawers_0, 1912])'
+
+    max_skill_steps            : 10
+    at_resting_threshold       : 0.15
+    force_end_on_timeout       : True
+
+    max_dis_interact_art       : 2.0
+
+    enable_exploration         : False

@@ -7,6 +7,7 @@ from typing import List, Tuple
 import torch
 
 from habitat_llm.agent.env.actions import find_action_range
+from habitat_llm.tools.motor_skills.art_obj.lock_registry import FurnitureLockRegistry
 from habitat_llm.tools.motor_skills.skill import SkillPolicy
 from habitat_llm.utils.grammar import FURNITURE
 from habitat_llm.utils.sim import (
@@ -113,6 +114,17 @@ class OracleOpenCloseSkill(SkillPolicy):
         target_entity = self.env.world_graph[self.agent_uid].get_node_from_sim_handle(
             self.target_handle
         )
+
+        # Check if the target furniture is password-locked
+        if self.skill_subtype == "Open":
+            registry = FurnitureLockRegistry()
+            if registry.is_locked(target_entity.name):
+                self.failed = True
+                self.termination_message = (
+                    f"Failed to Open! {target_entity.name} is locked. "
+                    f"You need to unlock it first with the correct 4-digit password."
+                )
+                return action, None
 
         # Check if the target is a receptacle or surface
         target_is_furniture = False

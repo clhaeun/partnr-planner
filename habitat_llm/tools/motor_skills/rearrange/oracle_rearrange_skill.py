@@ -124,6 +124,11 @@ class OracleRearrangeSkill(SkillPolicy):
         # Split the comma separated values
         values = [value.strip() for value in arg_string.split(",")]
 
+        # Auto-pad 3-arg format to 5-arg format (e.g., Rearrange[obj, on, table] -> Rearrange[obj, on, table, None, None])
+        if len(values) == 3:
+            values.extend(["None", "None"])
+            arg_string = ", ".join(values)
+
         # Make sure that there are 5 arguments
         if len(values) != 5:
             raise ValueError(

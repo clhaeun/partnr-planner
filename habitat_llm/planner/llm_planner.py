@@ -23,6 +23,7 @@ from habitat_llm.utils.grammar import (
     NAV_TARGET,
     OBJECT,
     OBJECT_OR_FURNITURE,
+    PASSWORD,
     ROOM,
     SPATIAL_CONSTRAINT,
     SPATIAL_RELATION,
@@ -156,12 +157,14 @@ class LLMPlanner(Planner):
         spatial_constraint_rule = f'{SPATIAL_CONSTRAINT} ::= "next_to"'
         spatial_relation_rule = f'{SPATIAL_RELATION} ::= "on" | "within"'
         free_text_rule = f"{FREE_TEXT} ::= [ \"'.:,!a-zA-Z_0-9]*"
+        password_rule = f"{PASSWORD} ::= [0-9] [0-9] [0-9] [0-9]"
         white_space_rule = "WS ::= [ ]*"
         rules.append(furniture_rule)
         rules.append(room_rule)
         rules.append(spatial_constraint_rule)
         rules.append(spatial_relation_rule)
         rules.append(free_text_rule)
+        rules.append(password_rule)
         rules.append(white_space_rule)
         grammar_str += "\n".join(rules)
         return grammar_str

@@ -104,6 +104,10 @@ class OraclePlaceSkill(SkillPolicy):
         # Separate the input string into values
         values = [value.strip() for value in arg_string.split(",")]
 
+        # Auto-pad 3-arg format to 5-arg format (e.g., Place[obj, on, table] -> Place[obj, on, table, None, None])
+        if len(values) == 3:
+            values.extend(["None", "None"])
+
         # Early exit if 5 arguments are not provided
         if len(values) != 5:
             raise ValueError(incorrect_api_usage_str)
